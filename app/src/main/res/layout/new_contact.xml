@@ -1,0 +1,27 @@
+
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <EditText
+        android:id="@+id/newContactText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:hint="New Contact"/>
+    <Button
+        android:id="@+id/newContactButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newContactText"
+        android:layout_alignParentEnd="true"
+        android:textSize="16sp"
+        android:text="add"
+        android:textColor="@android:color/holo_orange_dark"
+        android:background="@android:color/transparent"/>
+
+
+
+</RelativeLayout>
