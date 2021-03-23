@@ -1,4 +1,5 @@
 package com.college.addressbookiii.Utilities;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.college.addressbookiii.MainActivity;
@@ -18,71 +19,66 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TextFileHandler {
-    public static final String DELIMITER = "~";
-    private static ArrayList<ContactModel> addressBook = new ArrayList<>();
-    //static Scanner sc = new Scanner(System.in);
+    private ArrayList<ContactModel> contactList;
+    private final String DELIMITTER = ",";
+    private void saveAddressBook(){
 
+    }
+    public TextFileHandler(){
+        
+    }
+    public void openAddressBook(){
+        try{
+            File file = new File("AddressBook.txt");
+            if(!(file.createNewFile())){
 
-    private static void createFile() {
-        try {
-            File myFile = new File("AddressBook.txt");
-            if(myFile.createNewFile()) {
-                System.out.println();
-                System.out.println("Welcome to this address book program!");
-                System.out.println("** New address book created for you **");
-            } else {
+            }else{
                 loadAddressBook();
-                System.out.println();
-                System.out.println("Welcome back to your address book!");
-                //Toast.makeText(, "Saved your text", Toast.LENGTH_LONG).show();
             }
-        } catch(IOException ioE) {
-            System.out.println();
-            System.out.println("Error creating file");
-            System.out.println(ioE.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
+    };
+    
 
-    private void storeAddressBook(ArrayList<ContactModel> adBook) throws IOException {
-        //Collections.sort(addressBook);
-        FileWriter fw = new FileWriter("AddressBook.txt");
-        PrintWriter pw = new PrintWriter(fw);
-        pw.write("\n");
-        for(ContactModel cont : adBook) {
-            pw.write(cont.getFirstName() + DELIMITER);
-            //pw.write(cont.getLastName() + DELIMITER);
-            //pw.write(cont.getAddress() + DELIMITER);
-            //pw.write(cont.getPhoneNumber() + "");
-            pw.write("\n");
-        }
-        pw.close();
-    }
-
-    private static void loadAddressBook() {
-        BufferedReader br = null;
+    public void loadAddressBook(){
         try {
-            br = new BufferedReader(new FileReader("AddressBook.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("AddressBook.txt"));
             String line = "";
             br.readLine();
 
-            while((line = br.readLine()) != null) {
-                String[] contactDetails = line.split(DELIMITER);
-                if(contactDetails.length > 0) {
-                    //ContactModel loadContact = new ContactModel(contactDetails[0], contactDetails[1], contactDetails[2], contactDetails[3]);
-                    //addressBook.add(loadContact);
+            while((line = br.readLine()) != null){
+                String[] contactDetails = line.split(DELIMITTER);
+                if(contactDetails.length>0){
+                    ContactModel loadContact = new ContactModel();
+                    loadContact.setFirstName(contactDetails[0]);
+                    loadContact.setStatus(0);
+                    loadContact.setId(contactList.size());
+                    contactList.add(loadContact);
                 }
             }
-        } catch (Exception e) {
-            System.out.println("here");
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException ioE) {
-                System.out.println("Error occurred while closing the Buffered Reader");
-                ioE.printStackTrace();
-            }
+        }catch (FileNotFoundException fnfe){
+            System.out.println(fnfe);
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
+   public void insertContact(ContactModel contact){
+        
+   }
 
+    public void updateContact(int id, String contact){
+
+    }
+    public void deleteContact(int id){
+
+    }
+    public void updateStatus(int id, int status){
+
+    }
+
+    public ArrayList<ContactModel> getAllContacts(){
+
+        return null;
+    }
 }

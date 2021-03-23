@@ -23,17 +23,19 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
     private ContactAdapter contactsAdapter;
     private ArrayList<ContactModel> addressBook;
     private FloatingActionButton fab;
-
+    TextFileHandler tf;
+    private Bundle savedInstanceState;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.savedInstanceState = savedInstanceState;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        tf = new TextFileHandler(this);
-        tf.openFile();
+        tf = new TextFileHandler();
+        tf.openAddressBook();
 
         addressBook = new ArrayList<>();
         fab = findViewById(R.id.fab);
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
 
         @Override
         public void handleDialogClose(DialogInterface dialog){
-            addressBook = tf.getAllTasks();
+            addressBook = tf.getAllContacts();
             Collections.reverse(addressBook);
             contactsAdapter.setContact(addressBook);
             contactsAdapter.notifyDataSetChanged();

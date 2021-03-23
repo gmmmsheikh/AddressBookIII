@@ -74,7 +74,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
     public void deleteContact(int position){
         ContactModel person = contactList.get(position);
-        tf.deletePerson(person.getId());
+        tf.deleteContact(person.getId());
         contactList.remove(position);
         notifyItemRemoved(position);
     }

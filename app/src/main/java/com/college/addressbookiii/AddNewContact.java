@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.
-
 import androidx.core.content.ContextCompat;
 
 import com.college.addressbookiii.Model.ContactModel;
@@ -49,7 +47,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
         newContactText= getView().findViewById(R.id.newContactText);
         newContactSaveButton = getView().findViewById(R.id.newContactButton);
 
-        tf = new TextFileHandler(getActivity());
+        tf = new TextFileHandler();
         tf.loadAddressBook();
 
         boolean isUpdate = false;
