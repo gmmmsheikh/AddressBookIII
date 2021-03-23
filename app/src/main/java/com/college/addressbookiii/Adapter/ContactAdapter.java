@@ -12,16 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.college.addressbookiii.AddNewContact;
 import com.college.addressbookiii.MainActivity;
-import com.college.addressbookiii.Model.ContactModel;
+import com.college.addressbookiii.Objects.Contact;
 import com.college.addressbookiii.R;
 import com.college.addressbookiii.Utilities.TextFileHandler;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
-    private ArrayList<ContactModel> contactList;
+    private ArrayList<Contact> contactList;
     private MainActivity activity;
     private TextFileHandler tf;
 
@@ -38,7 +36,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     public void onBindViewHolder(ViewHolder holder, int position){
         tf.openAddressBook();
-        ContactModel item = contactList.get(position);
+        Contact item = tf.getAllContacts().get(position);
         holder.contact.setText(item.getFirstName());
         holder.contact.setChecked(toBoolean(item.getStatus()));
         holder.contact.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -60,7 +58,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return n!=0;
     }
 
-    public void setContact(ArrayList<ContactModel> contactList){
+    public void setContact(ArrayList<Contact> contactList){
         this.contactList = contactList;
         notifyDataSetChanged();
     }
@@ -69,18 +67,18 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return activity;
     }
 
-    public void setContacts(ArrayList<ContactModel> contactList){
+    public void setContacts(ArrayList<Contact> contactList){
         this.contactList = contactList;
     }
     public void deleteContact(int position){
-        ContactModel person = contactList.get(position);
+        Contact person = contactList.get(position);
         tf.deleteContact(person.getId());
         contactList.remove(position);
         notifyItemRemoved(position);
     }
 
     public void editItem(int position){
-        ContactModel item = contactList.get(position);
+        Contact item = contactList.get(position);
         Bundle bundle = new Bundle();
         bundle.putInt("id", item.getId());
         bundle.putString("contact", item.getFirstName());

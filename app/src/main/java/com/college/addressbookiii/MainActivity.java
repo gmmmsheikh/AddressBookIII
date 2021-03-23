@@ -1,7 +1,6 @@
 package com.college.addressbookiii;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.college.addressbookiii.Adapter.ContactAdapter;
-import com.college.addressbookiii.Model.ContactModel;
+import com.college.addressbookiii.Objects.Contact;
 import com.college.addressbookiii.Utilities.TextFileHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
 
     private RecyclerView contactsRecyclerView;
     private ContactAdapter contactsAdapter;
-    private ArrayList<ContactModel> addressBook;
+    private ArrayList<Contact> addressBook;
     private FloatingActionButton fab;
     TextFileHandler tf;
     private Bundle savedInstanceState;
@@ -54,14 +53,12 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         });
     }
 
-        @Override
-        public void handleDialogClose(DialogInterface dialog){
-            addressBook = tf.getAllContacts();
-            Collections.reverse(addressBook);
-            contactsAdapter.setContact(addressBook);
-            contactsAdapter.notifyDataSetChanged();
-        }
-
-
+    @Override
+    public void handleDialogClose(DialogInterface dialog){
+        addressBook = tf.getAllContacts();
+        Collections.reverse(addressBook);
+        contactsAdapter.setContact(addressBook);
+        contactsAdapter.notifyDataSetChanged();
     }
+
 }

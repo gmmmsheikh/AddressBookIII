@@ -1,7 +1,6 @@
 package com.college.addressbookiii;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import androidx.core.content.ContextCompat;
 
-import com.college.addressbookiii.Model.ContactModel;
+import com.college.addressbookiii.Objects.Contact;
 import com.college.addressbookiii.Utilities.TextFileHandler;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -92,7 +91,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
                 if (finalIsUpdate) {
                     tf.updateContact(bundle.getInt("key"), text);
                 } else {
-                    ContactModel contact = new ContactModel();
+                    Contact contact = new Contact();
                     contact.setFirstName(text);
                     contact.setStatus(0);
                 }
