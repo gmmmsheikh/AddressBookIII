@@ -10,11 +10,10 @@ import android.view.View;
 
 import com.college.addressbookiii.Adapter.ContactAdapter;
 import com.college.addressbookiii.Objects.Contact;
-import com.college.addressbookiii.Utilities.TextFileHandler;
+import com.college.addressbookiii.Utilities.DatabaseHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements DialogCloseListener{
 
@@ -22,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
     private ContactAdapter contactsAdapter;
     private ArrayList<Contact> addressBook;
     private FloatingActionButton fab;
-    TextFileHandler tf;
+    DatabaseHandler tf;
     private Bundle savedInstanceState;
 
 
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        tf = new TextFileHandler();
+        tf = new DatabaseHandler();
         tf.openAddressBook();
 
         addressBook = new ArrayList<>();
@@ -43,7 +42,9 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         contactsAdapter = new ContactAdapter(tf,this);
         contactsRecyclerView.setAdapter(contactsAdapter);
         addressBook = tf.getAllContacts();
-        Collections.reverse(addressBook);
+        //Collections.reverse(addressBook);
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
     @Override
     public void handleDialogClose(DialogInterface dialog){
         addressBook = tf.getAllContacts();
-        Collections.reverse(addressBook);
+        //Collections.reverse(addressBook);
         contactsAdapter.setContact(addressBook);
         contactsAdapter.notifyDataSetChanged();
     }

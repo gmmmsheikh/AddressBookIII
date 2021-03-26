@@ -15,7 +15,7 @@ import android.widget.EditText;
 import androidx.core.content.ContextCompat;
 
 import com.college.addressbookiii.Objects.Contact;
-import com.college.addressbookiii.Utilities.TextFileHandler;
+import com.college.addressbookiii.Utilities.DatabaseHandler;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class AddNewContact extends BottomSheetDialogFragment {
@@ -23,7 +23,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
 
     private EditText newContactText;
     private Button newContactSaveButton;
-    private TextFileHandler tf;
+    private DatabaseHandler tf;
 
     public static AddNewContact newInstance() {
         return new AddNewContact();
@@ -46,7 +46,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
         newContactText= getView().findViewById(R.id.newContactText);
         newContactSaveButton = getView().findViewById(R.id.newContactButton);
 
-        tf = new TextFileHandler();
+        tf = new DatabaseHandler();
         tf.loadAddressBook();
 
         boolean isUpdate = false;

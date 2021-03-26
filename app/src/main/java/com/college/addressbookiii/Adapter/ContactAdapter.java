@@ -8,52 +8,60 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.college.addressbookiii.AddNewContact;
 import com.college.addressbookiii.MainActivity;
 import com.college.addressbookiii.Objects.Contact;
 import com.college.addressbookiii.R;
-import com.college.addressbookiii.Utilities.TextFileHandler;
+import com.college.addressbookiii.Utilities.DatabaseHandler;
 
 import java.util.ArrayList;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     private ArrayList<Contact> contactList;
     private MainActivity activity;
-    private TextFileHandler tf;
+    private DatabaseHandler tf;
+    public int itemCount = 0;
 
-    public ContactAdapter(TextFileHandler tf,MainActivity activity){
+    public ContactAdapter(DatabaseHandler tf, MainActivity activity){
         this.tf = tf;
         this.activity = activity;
     }
-
+    @Nullable
+    @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.contact_layout, parent, false);
         return  new ViewHolder(itemView);
     }
-
-    public void onBindViewHolder(ViewHolder holder, int position){
-        tf.openAddressBook();
-        Contact item = tf.getAllContacts().get(position);
-        holder.contact.setText(item.getFirstName());
-        holder.contact.setChecked(toBoolean(item.getStatus()));
-        holder.contact.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    tf.updateStatus(item.getId(), 1);
-                }else{
-                    tf.updateStatus(item.getId(), 0);
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        try {
+            tf.openAddressBook();
+            final Contact item = contactList.get(position);
+            holder.contact.setText(item.getFirstName());
+            holder.contact.setChecked(toBoolean(item.getStatus()));
+            holder.contact.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        tf.updateStatus(item.getId(), 1);
+                    } else {
+                        tf.updateStatus(item.getId(), 0);
+                    }
                 }
-            }
-        });
+            });
+        }catch (Exception e){System.out.println(e);}
     }
+
+    @Override
     public int getItemCount(){
         return contactList.size();
     }
 
+    //helper function to chnage int to boolean
     private boolean toBoolean(int n){
         return n!=0;
     }
@@ -67,9 +75,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return activity;
     }
 
-    public void setContacts(ArrayList<Contact> contactList){
-        this.contactList = contactList;
-    }
     public void deleteContact(int position){
         Contact person = contactList.get(position);
         tf.deleteContact(person.getId());
@@ -82,9 +87,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         Bundle bundle = new Bundle();
         bundle.putInt("id", item.getId());
         bundle.putString("contact", item.getFirstName());
-        AddNewContact fragment = new AddNewContact();
-        fragment.setArguments(bundle);
-        fragment.show(activity.getSupportFragmentManager(),
+        AddNewContact newPerson = new AddNewContact();
+        newPerson.setArguments(bundle);
+        newPerson.show(activity.getSupportFragmentManager(),
                 AddNewContact.TAG);
     }
 
