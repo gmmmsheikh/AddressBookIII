@@ -21,12 +21,15 @@ import java.util.Collections;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final int VERSION = 1;
+    private static final String TAG="DatabaseHelper";
+    private static final String TABLE_NAME = "addressbook_table";
+
     private static final String NAME = "toDoListDatabase";
-    private static final String TODO_TABLE = "todo";
     private static final String ID = "id";
-    private static final String TASK = "task";
+    private static final String CONTACT = "contact";
     private static final String STATUS = "status";
-    private static final String CREATE_TODO_TABLE = "CREATE TABLE " + TODO_TABLE + "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TASK + " TEXT, "
+    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
+            "(" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + CONTACT + " TEXT, "
             + STATUS + " INTEGER)";
 
     private SQLiteDatabase db;
@@ -37,13 +40,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TODO_TABLE);
+        db.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TODO_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         // Create tables again
         onCreate(db);
     }
@@ -52,25 +55,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
     }
 
-    public void insertTask(Contact contact){
+    public void insertContact(Contact contact){
         ContentValues cv = new ContentValues();
-        cv.put(TASK, contact.getFirstName());
+        cv.put(CONTACT, contact.getFirstName());
         cv.put(STATUS, 0);
-        db.insert(TODO_TABLE, null, cv);
+        db.insert(TABLE_NAME, null, cv);
     }
 
     public ArrayList<Contact> getAllTasks(){
         ArrayList<Contact> taskList = new ArrayList<>();
-        Cursor cur = null;
         db.beginTransaction();
+        Cursor cur = null;
         try{
-            cur = db.query(TODO_TABLE, null, null, null, null, null, null, null);
+            cur = db.query(TABLE_NAME, null, null, null, null, null, null, null);
             if(cur != null){
                 if(cur.moveToFirst()){
                     do{
                         Contact task = new Contact();
                         task.setId(cur.getInt(cur.getColumnIndex(ID)));
-                        task.setFirstName(cur.getString(cur.getColumnIndex(TASK)));
+                        task.setFirstName(cur.getString(cur.getColumnIndex(CONTACT)));
                         task.setStatus(cur.getInt(cur.getColumnIndex(STATUS)));
                         taskList.add(task);
                     }
@@ -89,16 +92,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void updateStatus(int id, int status){
         ContentValues cv = new ContentValues();
         cv.put(STATUS, status);
-        db.update(TODO_TABLE, cv, ID + "= ?", new String[] {String.valueOf(id)});
+        db.update(TABLE_NAME, cv, ID + "= ?", new String[] {String.valueOf(id)});
     }
 
-    public void updateTask(int id, String task) {
+    public void updateContact(int id, String firstName) {
         ContentValues cv = new ContentValues();
-        cv.put(TASK, task);
-        db.update(TODO_TABLE, cv, ID + "= ?", new String[] {String.valueOf(id)});
+        cv.put(CONTACT, firstName);
+        db.update(TABLE_NAME, cv, ID + "= ?", new String[] {String.valueOf(id)});
     }
 
-    public void deleteTask(int id){
-        db.delete(TODO_TABLE, ID + "= ?", new String[] {String.valueOf(id)});
+    public void deleteContact(int id){
+        db.delete(TABLE_NAME, ID + "= ?", new String[] {String.valueOf(id)});
     }
 }
