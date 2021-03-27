@@ -23,7 +23,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
 
     private EditText newContactText;
     private Button newContactSaveButton;
-    private DatabaseHandler tf;
+    private DatabaseHandler db;
 
     public static AddNewContact newInstance() {
         return new AddNewContact();
@@ -46,8 +46,8 @@ public class AddNewContact extends BottomSheetDialogFragment {
         newContactText= getView().findViewById(R.id.newContactText);
         newContactSaveButton = getView().findViewById(R.id.newContactButton);
 
-        tf = new DatabaseHandler();
-        tf.loadAddressBook();
+        db = new DatabaseHandler(getActivity());
+        db.openDatabase();
 
         boolean isUpdate = false;
         final Bundle bundle = getArguments();
@@ -55,7 +55,8 @@ public class AddNewContact extends BottomSheetDialogFragment {
             isUpdate = true;
             String contact = bundle.getString("contact");
             newContactText.setText(contact);
-            if(contact.length()>0){
+            assert contact != null;
+            if(!contact.equalsIgnoreCase("")){
                 newContactSaveButton.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.design_default_color_primary_dark));
             }
@@ -89,7 +90,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 String text = newContactText.getText().toString();
                 if (finalIsUpdate) {
-                    tf.updateContact(bundle.getInt("key"), text);
+                    db.updateContact(bundle.getInt("key"), text);
                 } else {
                     Contact contact = new Contact();
                     contact.setFirstName(text);
