@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +30,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         this.db = db;
         this.activity = activity;
     }
-    @Nullable
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View itemView = LayoutInflater.from(parent.getContext())
@@ -37,7 +38,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return  new ViewHolder(itemView);
     }
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             db.openDatabase();
             final Contact item = contactList.get(position);
@@ -87,10 +88,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     public void editItem(int position){
-        Contact item = contactList.get(position);
+        Contact person = contactList.get(position);
         Bundle bundle = new Bundle();
-        bundle.putInt("id", item.getId());
-        bundle.putString("contact", item.getFirstName());
+        bundle.putInt("id", person.getId());
+        bundle.putString("contact", person.getFirstName());
+        // add new contact
         AddNewContact newPerson = new AddNewContact();
         newPerson.setArguments(bundle);
         newPerson.show(activity.getSupportFragmentManager(),

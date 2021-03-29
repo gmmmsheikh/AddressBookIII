@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.college.addressbookiii.Objects.Contact;
@@ -34,8 +36,11 @@ public class AddNewContact extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.DialogStyle);
     }
+
+    @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        // uses the new_contact card for new contact insertion
         View view = inflater.inflate(R.layout.new_contact, container, false);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return view;
@@ -55,23 +60,27 @@ public class AddNewContact extends BottomSheetDialogFragment {
             isUpdate = true;
             String contact = bundle.getString("contact");
             newContactText.setText(contact);
+            // To make sure that contact is never null . . .
             assert contact != null;
+            // change color of button if text-field is not empty
             if(!contact.equalsIgnoreCase("")){
                 newContactSaveButton.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.design_default_color_primary_dark));
             }
         }
+
+        // this occurs when there is a change in the text
         newContactText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            // intentionally kept empty
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.toString().equals("")){
                     newContactSaveButton.setEnabled(false);
-                    newContactSaveButton.setTextColor(Color.TRANSPARENT);
+                    newContactSaveButton.setTextColor(Color.WHITE);
                 }else{
                     newContactSaveButton.setEnabled(true);
                     newContactSaveButton.setTextColor(Color.GREEN);
@@ -80,7 +89,7 @@ public class AddNewContact extends BottomSheetDialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                // intentionally kept empty
             }
         });
 
@@ -89,13 +98,17 @@ public class AddNewContact extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 String text = newContactText.getText().toString();
+                // updates if existing, otherwise create new contact
                 if (finalIsUpdate) {
                     db.updateContact(bundle.getInt("key"), text);
                 } else {
+
                     Contact contact = new Contact();
                     contact.setFirstName(text);
                     contact.setStatus(0);
+                    db.insertContact(contact);
                 }
+                //dismiss fragment and fragment dialog
                 dismiss();
             }
         });

@@ -38,16 +38,16 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         db.openDatabase();
 
         addressBook = new ArrayList<>();
-        fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fabAdd);
         contactsRecyclerView = findViewById(R.id.contactRecyclerView);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         contactsAdapter = new ContactAdapter(db,this);
         contactsRecyclerView.setAdapter(contactsAdapter);
 
-        /*ItemTouchHelper itemTouchHelper = new
+       ItemTouchHelper itemTouchHelper = new
                 ItemTouchHelper(new RecyclerItemTouchHelper(contactsAdapter));
-        itemTouchHelper.attachToRecyclerView(contactsRecyclerView);
-        */
+       itemTouchHelper.attachToRecyclerView(contactsRecyclerView);
+
 
         addressBook = db.getAllContacts();
         Collections.reverse(addressBook);
