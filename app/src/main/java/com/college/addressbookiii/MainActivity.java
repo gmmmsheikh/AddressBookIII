@@ -1,6 +1,7 @@
 package com.college.addressbookiii;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +15,7 @@ import com.college.addressbookiii.Utilities.DatabaseHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements DialogCloseListener{
 
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
     private ContactAdapter contactsAdapter;
     private ArrayList<Contact> addressBook;
     private FloatingActionButton fab;
-    DatabaseHandler tf;
+    DatabaseHandler db;
     private Bundle savedInstanceState;
 
 
@@ -32,19 +34,23 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        tf = new DatabaseHandler();
-        tf.openAddressBook();
+        db = new DatabaseHandler(this);
+        db.openDatabase();
 
         addressBook = new ArrayList<>();
         fab = findViewById(R.id.fab);
         contactsRecyclerView = findViewById(R.id.contactRecyclerView);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        contactsAdapter = new ContactAdapter(tf,this);
+        contactsAdapter = new ContactAdapter(db,this);
         contactsRecyclerView.setAdapter(contactsAdapter);
-        addressBook = tf.getAllContacts();
-        //Collections.reverse(addressBook);
 
+        /*ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new RecyclerItemTouchHelper(contactsAdapter));
+        itemTouchHelper.attachToRecyclerView(contactsRecyclerView);
+        */
 
+        addressBook = db.getAllContacts();
+        Collections.reverse(addressBook);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements DialogCloseListen
 
     @Override
     public void handleDialogClose(DialogInterface dialog){
-        addressBook = tf.getAllContacts();
-        //Collections.reverse(addressBook);
+        addressBook = db.getAllContacts();
+        Collections.reverse(addressBook);
         contactsAdapter.setContact(addressBook);
         contactsAdapter.notifyDataSetChanged();
     }

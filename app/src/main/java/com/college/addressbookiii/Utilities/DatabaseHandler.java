@@ -62,7 +62,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, cv);
     }
 
-    public ArrayList<Contact> getAllTasks(){
+    public ArrayList<Contact> getAllContacts(){
         ArrayList<Contact> taskList = new ArrayList<>();
         db.beginTransaction();
         Cursor cur = null;

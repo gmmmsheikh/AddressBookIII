@@ -22,11 +22,11 @@ import java.util.ArrayList;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     private ArrayList<Contact> contactList;
     private MainActivity activity;
-    private DatabaseHandler tf;
+    private DatabaseHandler db;
     public int itemCount = 0;
 
-    public ContactAdapter(DatabaseHandler tf, MainActivity activity){
-        this.tf = tf;
+    public ContactAdapter(DatabaseHandler db, MainActivity activity){
+        this.db = db;
         this.activity = activity;
     }
     @Nullable
@@ -39,7 +39,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         try {
-            tf.openAddressBook();
+            db.openDatabase();
             final Contact item = contactList.get(position);
             holder.contact.setText(item.getFirstName());
             holder.contact.setChecked(toBoolean(item.getStatus()));
@@ -47,9 +47,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        tf.updateStatus(item.getId(), 1);
+                        db.updateStatus(item.getId(), 1);
                     } else {
-                        tf.updateStatus(item.getId(), 0);
+                        db.updateStatus(item.getId(), 0);
                     }
                 }
             });
@@ -58,7 +58,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @Override
     public int getItemCount(){
-        return contactList.size();
+        try {
+            return contactList.size();
+        }catch (NullPointerException npe){
+            return 0;
+        }
     }
 
     //helper function to chnage int to boolean
@@ -77,7 +81,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     public void deleteContact(int position){
         Contact person = contactList.get(position);
-        tf.deleteContact(person.getId());
+        db.deleteContact(person.getId());
         contactList.remove(position);
         notifyItemRemoved(position);
     }
